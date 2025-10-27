@@ -14,31 +14,43 @@ export default function SignUpPage() {
   });
 
   const [ buttonDisabled, setButtonDisabled ] = React.useState(false);
-
+  const [ loading, setLoading ] = React.useState(false);
 
   const onSignUp = async () => {
     try {
-      
+      setLoading(true);
+      const response = await axios.post("/api/users/signup", user);
+      console.log("Sign Up success," , response.data);
+      toast.success("Account created successfully")
+      router.push("/login");
     } catch (error: any) {
-      toast.error(error.message)
+      console.log("Sign Up error: ", error.message);
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    if(user.email.length > 0 && user.password.length > 0 && user.username.length > 0) {
-      setButtonDisabled(false)
+    if (
+      user.email.length > 0 &&
+      user.password.length > 0 &&
+      user.username.length > 0
+    ) {
+      setButtonDisabled(false);
     } else {
-      setButtonDisabled(true)
+      setButtonDisabled(true);
     }
-  }, [user])
-  
+  }, [user]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
       <div className="border p-10 rounded-xl">
-        <h1 className="text-2xl text-center mb-3 font-bold">Sign Up</h1>
+        <h1 className="text-2xl text-center mb-3 font-bold">{loading ? "Processing" : "Sign Up"}</h1>
         <hr />
-        <form action="" className="flex flex-col mt-5">
+        <form onSubmit={(e) => {
+          e.preventDefault();
+        }} className="flex flex-col mt-5">
           <label htmlFor="username">Username</label>
           <input
             id="username"
