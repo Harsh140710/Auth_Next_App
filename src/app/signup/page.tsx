@@ -1,17 +1,37 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function SignUpPage() {
+  const router = useRouter();
   const [user, setUSer] = React.useState({
     email: "",
     password: "",
     username: "",
   });
 
-  const onSignUp = async () => {};
+  const [ buttonDisabled, setButtonDisabled ] = React.useState(false);
+
+
+  const onSignUp = async () => {
+    try {
+      
+    } catch (error: any) {
+      toast.error(error.message)
+    }
+  };
+
+  useEffect(() => {
+    if(user.email.length > 0 && user.password.length > 0 && user.username.length > 0) {
+      setButtonDisabled(false)
+    } else {
+      setButtonDisabled(true)
+    }
+  }, [user])
+  
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
@@ -50,12 +70,22 @@ export default function SignUpPage() {
             placeholder="Enter the password"
           />
 
-          <button onClick={onSignUp} className="bg-blue-500 hover:bg-blue-600 font-semibold py-2 mt-2 rounded-xl cursor-pointer">Sign Up</button>
-        
-        <div className="flex items-center justify-between mt-5">
+          <button
+            onClick={onSignUp}
+            className="bg-blue-500 hover:bg-blue-600 font-semibold py-2 mt-2 rounded-xl cursor-pointer"
+          >
+            {buttonDisabled ? "Not signup" : "Sign Up"}
+          </button>
+
+          <div className="flex items-center justify-between mt-5">
             <p className="text-sm font-sans">You already have an account ?</p>
-            <Link href="/login" className="text-blue-600 underline text-sm font-semibold">Login</Link>
-        </div>
+            <Link
+              href="/login"
+              className="text-blue-600 underline text-sm font-semibold"
+            >
+              Login
+            </Link>
+          </div>
         </form>
       </div>
     </div>
